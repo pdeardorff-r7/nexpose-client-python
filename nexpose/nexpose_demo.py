@@ -2,49 +2,30 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from builtins import range
-from nexpose import OpenNexposeSession, as_string
+import nexpose as nexpose
+from nexpose import NexposeSession, as_string
 from future import standard_library
 import http.client
 standard_library.install_aliases()
 
-
-def output(response):
-    print(as_string(response))
-
-
+nexpose.SKIP_SSL_VERIFY = True
 http.client.HTTPConnection._http_vsn = 10
 http.client.HTTPConnection._http_vsn_str = 'HTTP/1.0'
 
 host = "localhost"
-port = 0
+port = 3780
 username = "nxadmin"
-password = "nxpassword"
+password = "nxadmin"
 
-session = OpenNexposeSession(host, port, username, password)
+session = nexpose.NexposeSession.CreateAndOpen(host, port, username, password)
 
-tags = session.RequestTagListing()[-1:]
-for tag in tags:
-    l_id = tag.id
-    print(tag.id, tag.name.encode('ascii', 'xmlcharrefreplace'))
-    for attr in tag.attributes:
-        print("  ", attr.id, attr.name, attr.value)
-    assert tag.name == u"ÇçĞğİıÖöŞşÜü"
-
-sites = session.RequestSiteListing()
-# output(sites)
-for site_id in range(1, 1 + 1):  # sites.xpath("/SiteListingResponse/SiteSummary/@id"):
-    # output(session.RequestSiteDeviceListing(site_id))
-    # output(session.RequestSiteScanHistory(site_id))
-    # json_as_dict = json.loads(session.RequestTags())
-    # tag = NexposeTag()
-    # tag.id = 0
-    # tag.type = "CUSTOM"
-    # tag.name += "?"
-    # tag.id = None
-    # print tag.as_json()
-    print(session.RemoveTagFromSite(l_id, site_id))
-    print(session.AddTagToSite(l_id, site_id))
-# output(session.RequestSystemInformation())
-
-for tag in session.RequestAssetTagListing(2):
-    print(tag.id, tag.name.encode('ascii', 'xmlcharrefreplace'))
+for asset in session.GetAssetSummaries():
+    asset_details = session.GetAssetDetails(asset.id)
+    print("Host: {} | Names: {} | Site: {} | Risk: {} | Vulns: {}".format(
+            asset.host,
+            asset_details.host_names,
+            asset.site_id,
+            asset.risk_factor,
+            asset_details.vulnerability_instances
+        )
+    )

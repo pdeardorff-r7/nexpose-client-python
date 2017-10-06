@@ -11,6 +11,25 @@ This library provides calls to the Nexpose XML APIs version 1.1 and 1.2.
 
 nexpose-client-python uses [Semantic Versioning](http://semver.org/). This allows for confident use of [version pinning](https://www.python.org/dev/peps/pep-0440/#version-specifiers) in your requirements file.
 
+## Testing
+Make sure tests requirements are installed with `pip install -r requirements_tests.txt`
+
+```
+$ py.test
+============================================================= test session starts =============================================================
+platform linux2 -- Python 2.7.10, pytest-3.2.2, py-1.4.34, pluggy-0.4.0
+collected 27 items
+
+tests/test_LoadFixture.py ...
+tests/test_NexposeNode.py .
+tests/test_NexposeReportConfigurationSummary.py ..
+tests/test_NexposeSession.py ...........
+tests/test_NexposeTag.py .....
+tests/test_NexposeUserAuthenticatorSummary.py .
+tests/test_NexposeVulnerability.py ....
+
+```
+
 ## Release Notes
 
 Release notes are available on the [Releases](https://github.com/rapid7/nexpose-client-python/releases) page.
@@ -26,7 +45,7 @@ Full usage examples or task-oriented scripts should be submitted to the [Nexpose
 The nexpose-client-python library is provided under the 3-Clause BSD License. See [LICENSE](./LICENSE) for details.
 
 ## Credits
-Davinsi Labs  
-Rapid7, Inc.  
+Davinsi Labs
+Rapid7, Inc.
 
 See [contributors](./contributors.md) for more info.

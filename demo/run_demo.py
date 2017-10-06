@@ -12,12 +12,12 @@ from io import BytesIO
 from zipfile import ZipFile
 import sslfix
 import nexpose as nexpose
+from nexpose import *
 from future import standard_library
 standard_library.install_aliases()
 make_dlnexpose_importable()
 
-as_string = nexpose.as_string  # for testing only
-
+#as_string = nexpose.as_string  # for testing only
 
 def xrange_as_customstr(xrange_object):
     return repr(xrange_object).replace('xrange', '').replace('(', '[').replace(')', ']').replace(', ', '..')

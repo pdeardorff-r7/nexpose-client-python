@@ -9,6 +9,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import base64
+import ssl
 import json
 from json_utils import load_urls
 from lxml import etree
@@ -43,16 +44,23 @@ from future import standard_library
 standard_library.install_aliases()
 
 DEFAULT_BLOCK_SIZE = 32768
+SKIP_SSL_VERIFY = False
 
 
 def OpenWebRequest(uri, post_data, headers, timeout, get_method=None):
     request = urllib.request.Request(uri, post_data, headers)
+
+    if SKIP_SSL_VERIFY:
+        context = ssl._create_unverified_context()
+    else:
+        context = None
+
     if get_method:
         request.get_method = get_method
     if timeout == 0:
-        response = urllib.request.urlopen(request)
+        response = urllib.request.urlopen(request, context=context)
     else:
-        response = urllib.request.urlopen(request, timeout=timeout)
+        response = urllib.request.urlopen(request, timeout=timeout, context=context)
     return response
 
 
@@ -65,7 +73,7 @@ def Execute_APIv1d1(uri, xml_input, timeout):
     post_data = as_string(xml_input)
     headers = {"Content-type": "text/xml"}  # TODO: add charset=UTF-8'
     response = ExecuteWebRequest(uri, post_data, headers, timeout)
-    return as_xml(response)
+    return as_xml(str(response))
 
 
 def Execute_APIv1d2(uri, xml_input, timeout):
